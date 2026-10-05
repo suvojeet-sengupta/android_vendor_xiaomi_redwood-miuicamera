@@ -36,7 +36,11 @@ blob_fixups: blob_fixups_user_type = {
         .apktool_patch('patches'),
     'system/lib64/libcamera_algoup_jni.xiaomi.so': blob_fixup()
         .add_needed('libgui_shim_miuicamera.so')
-        .sig_replace('08 AD 40 F9', '08 A9 40 F9'),
+        .sig_replace('08 AD 40 F9', '08 A9 40 F9')
+        # Skip the V10 init, it looks up MI_open_lib, which the redwood
+        # libmialgoengine doesn't export, and calls the NULL it gets back.
+        # Go straight to V11, which uses libmicampostproc_client instead.
+        .sig_replace('54 11 00 94', '07 00 00 14'),
     'system/lib64/libcamera_mianode_jni.xiaomi.so': blob_fixup()
         .add_needed('libgui_shim_miuicamera.so'),
     'system/lib64/libmicampostproc_client.so': blob_fixup()
